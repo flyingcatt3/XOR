@@ -9,6 +9,17 @@ sys.set_int_max_str_digits(100000)
 sys.set_int_max_str_digits(0)
 
 
+def format_time(seconds):
+    if seconds >= 1:
+        return f"{seconds:.3f} s"
+    elif seconds >= 1e-3:
+        return f"{seconds * 1000:.2f} ms"
+    elif seconds >= 1e-6:
+        return f"{seconds * 1_000_000:.2f} µs"
+    else:
+        return f"{seconds * 1_000_000_000:.2f} ns"
+
+
 def fwht(a):
     """In-place Fast Walsh-Hadamard Transform (O(M log M))"""
     n = len(a)
@@ -35,7 +46,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
             "status": "empty_array",
             "step": 0,
             "length": 0,
-            "elapsed_sec": time.time() - start_time,
+            "elapsed_sec": format_time(time.time() - start_time),
         }
 
     N = len(arr)
@@ -84,7 +95,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "length": N,
                 "msb_history": msb_collapse_history,
                 "note": "系統已失去所有能量，完全歸零",
-                "elapsed_sec": time.time() - start_time,
+                "elapsed_sec": format_time(time.time() - start_time),
             }
 
         # [終止條件 3] 常數循環 (Constant Value Loop)
@@ -96,7 +107,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "value": val,
                 "length": N,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": time.time() - start_time,
+                "elapsed_sec": format_time(time.time() - start_time),
             }
 
         # 基本終止條件
@@ -106,7 +117,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "step": step,
                 "length": N,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": time.time() - start_time,
+                "elapsed_sec": format_time(time.time() - start_time),
             }
 
         if N > max_len:
@@ -115,7 +126,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "step": step,
                 "length": N,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": time.time() - start_time,
+                "elapsed_sec": format_time(time.time() - start_time),
             }
 
         # 循環偵測
@@ -129,7 +140,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "length": N,
                 "is_length_fixed_point": is_length_fixed_point,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": time.time() - start_time,
+                "elapsed_sec": format_time(time.time() - start_time),
             }
         seen_hashes[state_key] = step
 
@@ -155,7 +166,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
         "step": max_steps,
         "length": N,
         "msb_history": msb_collapse_history,
-        "elapsed_sec": time.time() - start_time,
+        "elapsed_sec": format_time(time.time() - start_time),
     }
 
 
