@@ -46,7 +46,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
             "status": "empty_array",
             "step": 0,
             "length": 0,
-            "elapsed_sec": format_time(time.time() - start_time),
+            "elapsed_sec": time.time() - start_time,
         }
 
     N = len(arr)
@@ -95,7 +95,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "length": N,
                 "msb_history": msb_collapse_history,
                 "note": "系統已失去所有能量，完全歸零",
-                "elapsed_sec": format_time(time.time() - start_time),
+                "elapsed_sec": time.time() - start_time,
             }
 
         # [終止條件 3] 常數循環 (Constant Value Loop)
@@ -107,7 +107,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "value": val,
                 "length": N,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": format_time(time.time() - start_time),
+                "elapsed_sec": time.time() - start_time,
             }
 
         # 基本終止條件
@@ -117,7 +117,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "step": step,
                 "length": N,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": format_time(time.time() - start_time),
+                "elapsed_sec": time.time() - start_time,
             }
 
         if N > max_len:
@@ -126,7 +126,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "step": step,
                 "length": N,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": format_time(time.time() - start_time),
+                "elapsed_sec": time.time() - start_time,
             }
 
         # 循環偵測
@@ -140,7 +140,7 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
                 "length": N,
                 "is_length_fixed_point": is_length_fixed_point,
                 "msb_history": msb_collapse_history,
-                "elapsed_sec": format_time(time.time() - start_time),
+                "elapsed_sec": time.time() - start_time,
             }
         seen_hashes[state_key] = step
 
@@ -166,19 +166,57 @@ def simulate_all_knowing(arr, max_steps=1000, max_len=10**100):
         "step": max_steps,
         "length": N,
         "msb_history": msb_collapse_history,
-        "elapsed_sec": format_time(time.time() - start_time),
+        "elapsed_sec": time.time() - start_time,
     }
 
 
 if __name__ == "__main__":
-    print("=== Test 8: 終極觀測者測試 ===")
+    test_cases = [
+        ("TC01: 空陣列", []),
+        ("TC02: 單一元素", [0]),
+        ("TC03: 大數值", [99999]),
+        ("TC04: 基礎收斂", [0, 0]),
+        ("TC05: 常數全 1", [1, 1, 1, 1]),
+        ("TC06: 勢能崩潰", [255, 255, 255, 255]),
+        ("TC07: 混合歸零", [7, 7, 7, 0, 0, 0]),
+        ("TC08: 簡單震盪", [15, 15, 0]),
+        ("TC09: 奇異點 123", [1, 2, 3]),
+        ("TC10: 奇異點平移", [4, 8, 12]),
+        ("TC11: 奇異點亂數", [10, 20, 30]),
+        ("TC12: 2-bit 空間", [0, 1, 2, 3]),
+        ("TC13: 3-bit 空間", [0, 1, 2, 3, 4, 5, 6, 7]),
+        ("TC14: 2 的次方", [1, 2, 4, 8, 16]),
+        ("TC15: 4-bit 空間", list(range(16))),
+        ("TC16: 6-bit 空間", list(range(64))),
+        ("TC17: 大數值基底", [1024, 2048, 4096, 8192, 16384]),
+        ("TC18: 質數陣列", [3, 5, 7, 11, 13, 17, 19, 23]),
+        ("TC19: 高頻率重覆", [1] * 100 + [2] * 100 + [3] * 100),
+        ("TC20: 百連殺 (極限壓力測試)", list(range(100))),
+    ]
 
-    print("\n[測試 A] 空陣列防護")
-    print(simulate_all_knowing([]))
+    print("=== 執行 20 個綜合測試案例 ===")
 
-    print("\n[測試 B] 觀察 MSB 勢能崩潰與全零滅絕")
-    # 設計一個會快速坍縮的陣列
-    print(simulate_all_knowing([7, 7, 7, 7]))
+    for name, arr in test_cases:
+        # 設定最大步數 15 步，避免印出太多資訊
+        res = simulate_all_knowing(arr, max_steps=15, max_len=10**1000)
 
-    print("\n[測試 C] 數學奇異點 (長度永遠為 3)")
-    print(simulate_all_knowing([1, 2, 3]))
+        # 使用自訂的 format_time 將科學記號轉為直觀的時間字串
+        formatted_time = format_time(res["elapsed_sec"])
+
+        # 處理超級大數字的長度顯示
+        length_str = str(res["length"])
+        if len(length_str) > 15:
+            length_str = f"~ {length_str[0]}.{length_str[1:3]}e+{len(length_str) - 1} (長度已達 {len(length_str)} 位數)"
+
+        print(f"\n{name}")
+        # 直接使用 formatted_time，不需要加 :.3f 或 ms
+        print(
+            f"狀態: {res['status']:<20} | 執行步數: {res['step']:<2} | 耗時: {formatted_time}"
+        )
+        print(f"最終長度: {length_str}")
+
+        if "is_length_fixed_point" in res and res["is_length_fixed_point"]:
+            print("=> ⚠️ 偵測到 N=3 數學奇異點！")
+
+        if "msb_history" in res and res["msb_history"]:
+            print(f"=> 📉 偵測到勢能崩潰次數: {len(res['msb_history'])}")
