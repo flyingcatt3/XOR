@@ -71,3 +71,72 @@
 * **輸入：** `list(range(100))` (包含 0~99 共 100 個不重複數字的百連殺測試)
 * **演化表現：** 在短短 10 步之內，陣列虛擬長度突破 **$10^{1737}$**（一個 1738 位數的超級大數）。
 * **資源消耗：** 記憶體佔用全程保持常數，單一 CPU 核心耗時僅需 **~5 毫秒 (ms)**。
+
+## ✨ 視覺化介面 (WinUI 3 GUI)
+
+本專案不僅提供高效能的 CLI 工具，更內建了基於 `PyQt6-Fluent-Widgets` 打造的現代化圖形介面 (`gui.py`)。
+
+* **完美復刻 WinUI 3：** 具備 Windows 11 級別的流暢動畫、圓角設計與 Focus 視覺回饋。
+* **深淺色模式自適應：** 介面會自動跟隨系統切換 Dark/Light Mode。
+* **核心解耦：** GUI 完全解耦於核心演算法，直接掛載 `EvolutionEngine`，確保在擁有華麗介面的同時，不犧牲任何一滴算力。
+
+---
+
+## ✨ 視覺化介面 (WinUI 3 GUI)
+
+本專案不僅提供高效能的 CLI 工具，更內建了基於 `PyQt6-Fluent-Widgets` 打造的現代化圖形介面 (`gui.py`)。
+
+* **完美復刻 WinUI 3：** 具備 Windows 11 級別的流暢動畫、圓角設計與 Focus 視覺回饋。
+* **深淺色模式自適應：** 介面會自動跟隨系統切換 Dark/Light Mode。
+* **核心解耦：** GUI 完全解耦於核心演算法，直接掛載 `EvolutionEngine`，確保在擁有華麗介面的同時，不犧牲任何一滴算力。
+
+---
+
+## 🚀 快速開始 (Quick Start)
+
+我們推薦使用極速的套件管理器 [uv](https://github.com/astral-sh/uv) 來建立乾淨的執行環境。
+
+### 1. 建立並啟動虛擬環境
+
+```bash
+# 建立虛擬環境
+uv venv
+
+# 啟動虛擬環境 (Windows)
+.\.venv\Scripts\activate
+
+# 啟動虛擬環境 (macOS/Linux)
+source .venv/bin/activate
+```
+
+### 2. 安裝依賴套件
+
+核心演算法為零依賴（Zero Dependency）。但若要啟動 GUI 介面，請安裝 `requirements.txt` 中的套件：
+
+```bash
+uv pip install -r requirements.txt
+```
+
+### 3. 執行模擬器
+
+### 啟動圖形化介面（GUI）
+
+```bash
+python gui.py
+```
+
+### 執行單核心效能測試（CLI）
+
+```bash
+python test10.py
+```
+
+### 執行多核心並行壓力測試（CLI）
+
+```bash
+python test10_parallel.py
+```
+
+## 💡 貢獻與開發指南
+
+如果你想要替換不同的演化規則，只需撰寫新的 **Strategy Function**（接收頻率陣列並回傳新的頻率陣列），並將其注入到 `EvolutionEngine` 中即可，無需改動任何生命週期管理與防呆邏輯。

@@ -1,0 +1,6 @@
+# 排除 Python 編譯產生的暫存資料夾
+__pycache__/
+
+# 排除個別的編譯檔案
+*.py[cod]
+*$py.class
